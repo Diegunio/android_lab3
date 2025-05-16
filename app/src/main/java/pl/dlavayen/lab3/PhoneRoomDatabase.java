@@ -7,7 +7,6 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -35,8 +34,7 @@ public abstract class PhoneRoomDatabase extends RoomDatabase {
         // Ensure default phones are present if db is empty
         databaseWriteExecutor.execute(() -> {
             PhoneDao dao = INSTANCE.phoneDao();
-            List<Phone> phones = dao.getAllPhones().getValue();
-            if (phones == null || phones.isEmpty()) {
+            if (dao.getCount() == 0) {
                 dao.insert(new Phone("Samsung", "Galaxy S21", "11", "https://www.samsung.com"));
                 dao.insert(new Phone("Google", "Pixel 6", "12", "https://store.google.com"));
                 dao.insert(new Phone("OnePlus", "9 Pro", "11", "https://www.oneplus.com"));
@@ -52,8 +50,7 @@ public abstract class PhoneRoomDatabase extends RoomDatabase {
                     super.onCreate(db);
                     databaseWriteExecutor.execute(() -> {
                         PhoneDao dao = INSTANCE.phoneDao();
-                        // Dodaj przykładowe rekordy tylko jeśli baza jest pusta
-                        if (dao.getAllPhones().getValue() == null || dao.getAllPhones().getValue().isEmpty()) {
+                        if (dao.getCount() == 0) {
                             dao.insert(new Phone("Samsung", "Galaxy S21", "11", "https://www.samsung.com"));
                             dao.insert(new Phone("Google", "Pixel 6", "12", "https://store.google.com"));
                             dao.insert(new Phone("OnePlus", "9 Pro", "11", "https://www.oneplus.com"));

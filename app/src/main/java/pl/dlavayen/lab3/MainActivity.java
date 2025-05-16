@@ -5,14 +5,30 @@ import android.os.Build;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
+import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 
 public class MainActivity extends AppCompatActivity {
     private PhoneViewModel mPhoneViewModel;
+
+    private final ActivityResultLauncher<Intent> addPhoneLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                    Intent data = result.getData();
+                    String manufacturer = data.getStringExtra("manufacturer");
+                    String model = data.getStringExtra("model");
+                    String androidVersion = data.getStringExtra("androidVersion");
+                    String website = data.getStringExtra("website");
+                    Phone phone = new Phone(manufacturer, model, androidVersion, website);
+                    mPhoneViewModel.insert(phone);
+                }
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +50,8 @@ public class MainActivity extends AppCompatActivity {
         mPhoneViewModel.getAllPhones().observe(this, adapter::submitList);
 
         findViewById(R.id.fab_add).setOnClickListener(v -> {
-            // na potrzeby Zad.3.1 nie dodajemy jeszcze aktywności dodawania
+            Intent intent = new Intent(this, NewPhoneActivity.class);
+            addPhoneLauncher.launch(intent);
         });
     }
 

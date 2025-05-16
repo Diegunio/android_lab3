@@ -18,4 +18,7 @@ public interface PhoneDao {
 
     @Query("DELETE FROM phones")
     void deleteAll();
+
+    @Query("SELECT COUNT(*) FROM phones")
+    int getCount();
 }
