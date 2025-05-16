@@ -1,3 +1,7 @@
+/**
+ * Główna aktywność aplikacji.
+ * Wyświetla listę telefonów, obsługuje dodawanie, edycję i usuwanie rekordów.
+ */
 package pl.dlavayen.lab3;
 
 import android.os.Bundle;
@@ -19,6 +23,9 @@ public class MainActivity extends AppCompatActivity {
     private PhoneViewModel mPhoneViewModel;
     private Phone editingPhone = null;
 
+    /**
+     * Obsługuje wynik dodania/edycji telefonu i aktualizuje bazę.
+     */
     private final ActivityResultLauncher<Intent> addPhoneLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == RESULT_OK && result.getData() != null) {
@@ -38,6 +45,9 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
+    /**
+     * Inicjalizuje UI, ustawia adapter, ViewModel, obsługuje dodawanie, edycję i usuwanie rekordów.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,12 +101,18 @@ public class MainActivity extends AppCompatActivity {
         itemTouchHelper.attachToRecyclerView(recyclerView);
     }
 
+    /**
+     * Tworzy menu opcji.
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
+    /**
+     * Obsługuje wybór opcji menu (np. usuwanie wszystkich rekordów).
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_delete_all) {

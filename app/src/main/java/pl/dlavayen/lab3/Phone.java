@@ -1,3 +1,7 @@
+/**
+ * Model danych reprezentujący telefon w bazie danych Room.
+ * Zawiera producenta, model, wersję Androida oraz stronę WWW.
+ */
 package pl.dlavayen.lab3;
 
 import androidx.room.ColumnInfo;
@@ -25,6 +29,9 @@ public class Phone {
     @ColumnInfo(name = "website")
     public String website;
 
+    /**
+     * Konstruktor do tworzenia nowego obiektu Phone bez ID (do wstawiania nowych rekordów).
+     */
     @Ignore
     public Phone(@NonNull String manufacturer, @NonNull String model,
                  String androidVersion, String website) {
@@ -34,6 +41,9 @@ public class Phone {
         this.website = website;
     }
 
+    /**
+     * Konstruktor do tworzenia obiektu Phone z określonym ID (do aktualizacji istniejących rekordów).
+     */
     public Phone(long id, @NonNull String manufacturer, @NonNull String model,
                  String androidVersion, String website) {
         this.id = id;

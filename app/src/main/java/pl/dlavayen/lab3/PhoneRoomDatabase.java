@@ -1,3 +1,7 @@
+/**
+ * Klasa RoomDatabase przechowująca bazę danych telefonów
+ * Singleton, inicjalizuje bazę i domyślne rekordy
+ */
 package pl.dlavayen.lab3;
 
 import android.content.Context;
@@ -12,6 +16,9 @@ import java.util.concurrent.Executors;
 
 @Database(entities = {Phone.class}, version = 1, exportSchema = false)
 public abstract class PhoneRoomDatabase extends RoomDatabase {
+    /**
+     * Zwraca DAO do operacji na tabeli phones.
+     */
     public abstract PhoneDao phoneDao();
 
     private static volatile PhoneRoomDatabase INSTANCE;
@@ -19,6 +26,10 @@ public abstract class PhoneRoomDatabase extends RoomDatabase {
     static final ExecutorService databaseWriteExecutor =
             Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
+    /**
+     * Zwraca singleton bazy danych, inicjalizuje ją jeśli nie istnieje.
+     * Dodaje domyślne rekordy jeśli baza jest pusta.
+     */
     static PhoneRoomDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
             synchronized (PhoneRoomDatabase.class) {
@@ -31,7 +42,6 @@ public abstract class PhoneRoomDatabase extends RoomDatabase {
                 }
             }
         }
-        // Ensure default phones are present if db is empty
         databaseWriteExecutor.execute(() -> {
             PhoneDao dao = INSTANCE.phoneDao();
             if (dao.getCount() == 0) {
@@ -43,6 +53,9 @@ public abstract class PhoneRoomDatabase extends RoomDatabase {
         return INSTANCE;
     }
 
+    /**
+     * Callback wywoływany przy tworzeniu bazy, wstawia domyślne rekordy.
+     */
     private static RoomDatabase.Callback sRoomDatabaseCallback =
             new RoomDatabase.Callback() {
                 @Override
