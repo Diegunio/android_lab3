@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import androidx.annotation.NonNull;
+import androidx.room.Ignore;
 
 @Entity(tableName = "phones")
 public class Phone {
@@ -24,8 +25,18 @@ public class Phone {
     @ColumnInfo(name = "website")
     public String website;
 
+    @Ignore
     public Phone(@NonNull String manufacturer, @NonNull String model,
                  String androidVersion, String website) {
+        this.manufacturer = manufacturer;
+        this.model = model;
+        this.androidVersion = androidVersion;
+        this.website = website;
+    }
+
+    public Phone(long id, @NonNull String manufacturer, @NonNull String model,
+                 String androidVersion, String website) {
+        this.id = id;
         this.manufacturer = manufacturer;
         this.model = model;
         this.androidVersion = androidVersion;

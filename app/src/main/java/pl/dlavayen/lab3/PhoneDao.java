@@ -5,6 +5,7 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import java.util.List;
 
@@ -21,4 +22,10 @@ public interface PhoneDao {
 
     @Query("SELECT COUNT(*) FROM phones")
     int getCount();
+
+    @Update
+    void update(Phone phone);
+
+    @Delete
+    void delete(Phone phone);
 }

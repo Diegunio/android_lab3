@@ -13,20 +13,28 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.recyclerview.widget.ItemTouchHelper;
 
 public class MainActivity extends AppCompatActivity {
     private PhoneViewModel mPhoneViewModel;
+    private Phone editingPhone = null;
 
     private final ActivityResultLauncher<Intent> addPhoneLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                     Intent data = result.getData();
+                    long id = data.getLongExtra("id", -1);
                     String manufacturer = data.getStringExtra("manufacturer");
                     String model = data.getStringExtra("model");
                     String androidVersion = data.getStringExtra("androidVersion");
                     String website = data.getStringExtra("website");
-                    Phone phone = new Phone(manufacturer, model, androidVersion, website);
-                    mPhoneViewModel.insert(phone);
+                    if (id == -1) {
+                        Phone phone = new Phone(manufacturer, model, androidVersion, website);
+                        mPhoneViewModel.insert(phone);
+                    } else {
+                        Phone phone = new Phone(id, manufacturer, model, androidVersion, website);
+                        mPhoneViewModel.update(phone);
+                    }
                 }
             });
 
@@ -50,9 +58,37 @@ public class MainActivity extends AppCompatActivity {
         mPhoneViewModel.getAllPhones().observe(this, adapter::submitList);
 
         findViewById(R.id.fab_add).setOnClickListener(v -> {
+            editingPhone = null;
             Intent intent = new Intent(this, NewPhoneActivity.class);
             addPhoneLauncher.launch(intent);
         });
+
+        adapter.setOnItemClickListener(phone -> {
+            editingPhone = phone;
+            Intent intent = new Intent(this, NewPhoneActivity.class);
+            intent.putExtra("id", phone.id);
+            intent.putExtra("manufacturer", phone.manufacturer);
+            intent.putExtra("model", phone.model);
+            intent.putExtra("androidVersion", phone.androidVersion);
+            intent.putExtra("website", phone.website);
+            addPhoneLauncher.launch(intent);
+        });
+
+        // Swipe to delete
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
+                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                int pos = viewHolder.getAdapterPosition();
+                Phone phone = adapter.getCurrentList().get(pos);
+                mPhoneViewModel.delete(phone);
+            }
+        });
+        itemTouchHelper.attachToRecyclerView(recyclerView);
     }
 
     @Override

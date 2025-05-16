@@ -11,6 +11,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class PhoneListAdapter extends ListAdapter<Phone, PhoneListAdapter.PhoneViewHolder> {
 
+    private OnItemClickListener listener;
+
+    public interface OnItemClickListener {
+        void onItemClick(Phone phone);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
+
     protected PhoneListAdapter() {
         super(DIFF_CALLBACK);
     }
@@ -39,6 +49,9 @@ public class PhoneListAdapter extends ListAdapter<Phone, PhoneListAdapter.PhoneV
     @Override
     public void onBindViewHolder(@NonNull PhoneViewHolder holder, int position) {
         holder.bind(getItem(position));
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) listener.onItemClick(getItem(position));
+        });
     }
 
     static class PhoneViewHolder extends RecyclerView.ViewHolder {
