@@ -41,10 +41,12 @@ public abstract class PhoneRoomDatabase extends RoomDatabase {
                     super.onCreate(db);
                     databaseWriteExecutor.execute(() -> {
                         PhoneDao dao = INSTANCE.phoneDao();
-                        // przykładowe rekordy przy tworzeniu bazy :contentReference[oaicite:7]{index=7}
-                        dao.insert(new Phone("Samsung", "Galaxy S21", "11", "https://www.samsung.com"));
-                        dao.insert(new Phone("Google", "Pixel 6", "12", "https://store.google.com"));
-                        dao.insert(new Phone("OnePlus", "9 Pro", "11", "https://www.oneplus.com"));
+                        // Dodaj przykładowe rekordy tylko jeśli baza jest pusta
+                        if (dao.getAllPhones().getValue() == null || dao.getAllPhones().getValue().isEmpty()) {
+                            dao.insert(new Phone("Samsung", "Galaxy S21", "11", "https://www.samsung.com"));
+                            dao.insert(new Phone("Google", "Pixel 6", "12", "https://store.google.com"));
+                            dao.insert(new Phone("OnePlus", "9 Pro", "11", "https://www.oneplus.com"));
+                        }
                     });
                 }
             };

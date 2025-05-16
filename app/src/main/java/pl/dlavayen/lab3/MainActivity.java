@@ -1,33 +1,39 @@
 package pl.dlavayen.lab3;
 
 import android.os.Bundle;
+import android.os.Build;
 import android.view.Menu;
 import android.view.MenuItem;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
+import android.view.Window;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import pl.dlavayen.lab3.databinding.ActivityMainBinding;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class MainActivity extends AppCompatActivity {
     private PhoneViewModel mPhoneViewModel;
-    private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        setContentView(R.layout.activity_main);
 
+        // Ustaw kolor status bar na colorPrimaryDark
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
+        }
+
+        RecyclerView recyclerView = findViewById(R.id.recyclerview);
         PhoneListAdapter adapter = new PhoneListAdapter();
-        binding.recyclerview.setLayoutManager(new LinearLayoutManager(this));
-        binding.recyclerview.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
 
         mPhoneViewModel = new ViewModelProvider(this).get(PhoneViewModel.class);
         mPhoneViewModel.getAllPhones().observe(this, adapter::submitList);
 
-        binding.fabAdd.setOnClickListener(v -> {
+        findViewById(R.id.fab_add).setOnClickListener(v -> {
             // na potrzeby Zad.3.1 nie dodajemy jeszcze aktywności dodawania
         });
     }

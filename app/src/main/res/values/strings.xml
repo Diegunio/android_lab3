@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">lab3</string>
+    <string name="app_name">Phone DB</string>
     <string name="add_phone">Dodaj telefon</string>
     <string name="delete_all">Usuń wszystkie</string>
 </resources>

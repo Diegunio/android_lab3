@@ -1,15 +1,15 @@
 package pl.dlavayen.lab3;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
-import pl.dlavayen.lab3.databinding.ItemPhoneBinding;
 
-public class PhoneListAdapter
-        extends ListAdapter<Phone, PhoneListAdapter.PhoneViewHolder> {
+public class PhoneListAdapter extends ListAdapter<Phone, PhoneListAdapter.PhoneViewHolder> {
 
     protected PhoneListAdapter() {
         super(DIFF_CALLBACK);
@@ -31,9 +31,9 @@ public class PhoneListAdapter
     @NonNull
     @Override
     public PhoneViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ItemPhoneBinding binding = ItemPhoneBinding.inflate(
-                LayoutInflater.from(parent.getContext()), parent, false);
-        return new PhoneViewHolder(binding);
+        View itemView = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_phone, parent, false);
+        return new PhoneViewHolder(itemView);
     }
 
     @Override
@@ -42,16 +42,18 @@ public class PhoneListAdapter
     }
 
     static class PhoneViewHolder extends RecyclerView.ViewHolder {
-        private final ItemPhoneBinding binding;
+        private final TextView textManufacturer;
+        private final TextView textModel;
 
-        PhoneViewHolder(ItemPhoneBinding binding) {
-            super(binding.getRoot());
-            this.binding = binding;
+        PhoneViewHolder(View itemView) {
+            super(itemView);
+            textManufacturer = itemView.findViewById(R.id.text_manufacturer);
+            textModel = itemView.findViewById(R.id.text_model);
         }
 
         void bind(Phone phone) {
-            binding.textManufacturer.setText(phone.manufacturer);
-            binding.textModel.setText(phone.model);
+            textManufacturer.setText(phone.manufacturer);
+            textModel.setText(phone.model);
         }
     }
 }
