@@ -50,10 +50,7 @@ public class NewPhoneActivity extends AppCompatActivity {
         TextWatcher watcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            /**
-             * Sprawdza, czy wszystkie pola są wypełnione, aby aktywować przycisk zapisu.
-             */
+          
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 boolean allFilled = !editManufacturer.getText().toString().trim().isEmpty()
@@ -70,10 +67,7 @@ public class NewPhoneActivity extends AppCompatActivity {
         editModel.addTextChangedListener(watcher);
         editAndroidVersion.addTextChangedListener(watcher);
         editWebsite.addTextChangedListener(watcher);
-
-        /**
-         * Obsługuje zapis danych telefonu po walidacji pól.
-         */
+        
         buttonSave.setOnClickListener(v -> {
             boolean valid = true;
             if (TextUtils.isEmpty(editManufacturer.getText())) {
@@ -103,18 +97,12 @@ public class NewPhoneActivity extends AppCompatActivity {
             setResult(Activity.RESULT_OK, result);
             finish();
         });
-
-        /**
-         * Obsługuje anulowanie operacji dodawania/edycji telefonu.
-         */
+        
         buttonCancel.setOnClickListener(v -> {
             setResult(Activity.RESULT_CANCELED);
             finish();
         });
-
-        /**
-         * Obsługuje otwieranie strony WWW podanej w polu.
-         */
+        
         buttonWebsite.setOnClickListener(v -> {
             String url = editWebsite.getText().toString().trim();
             if (!url.startsWith("http://") && !url.startsWith("https://")) {
